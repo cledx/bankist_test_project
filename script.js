@@ -4,6 +4,8 @@
 /////////////////////////////////////////////////
 // BANKIST APP
 
+// Comment Git Test
+
 // Elements
 const labelWelcome = document.querySelector('.welcome');
 const labelDate = document.querySelector('.date');
