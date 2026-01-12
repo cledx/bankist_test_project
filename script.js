@@ -38,6 +38,9 @@ const currencies = new Map([
   ['GBP', { name: 'Pound sterling', symbol: '£' }],
 ]);
 const currentCurrency = 'EUR'
+const sortType = ['Date', 'Deposit First', 'Withdrawl First'];
+let sortCurrent = [sortType[0], 0];
+
 
 // Data
 const account1 = {
@@ -75,6 +78,7 @@ const accountTest = {
   pin: 1234,
 };
 const accounts = [account1, account2, account3, account4, accountTest];
+let currentAccount = accounts[4];
 
 function generateUsername(accs) {
   accs.forEach(acc => acc.username = acc.owner.toLowerCase().split(' ').map(name => name[0]).join(''));
@@ -165,7 +169,16 @@ const updateUI = function (acc, sort) {
   );
 
   calcPrintBalance();
-  sort == 'type' ? displayMovements(acc.movements.toSorted((a, b) => a - b)) : displayMovements(acc.movements);
+  switch (sort) {
+    case 'Deposit First':
+      displayMovements(acc.movements.toSorted((a, b) => a - b));
+      break;
+    case 'Withdrawl First':
+      displayMovements(acc.movements.toSorted((a, b) => b - a));
+      break;
+    default:
+      displayMovements(acc.movements);
+  }
   displayIn(acc.movements);
   displayOut(acc.movements);
   displayInterest(acc.movements);
@@ -180,6 +193,28 @@ const eurToUsd = 1.1;
 const deposits = movements.filter(mov => mov > 0);
 const withdrawls = movements.filter(mov => mov < 0);
 const depositsUSDTotal = deposits.map(mov => mov * eurToUsd).reduce((acc, mov) => acc + mov, 0);
+
+btnSort.addEventListener('click', function () {
+  sortCurrent[1] == 2 ? (() => {
+    sortCurrent[1] = 0;
+    sortCurrent[0] = sortType[0];
+  })() : (() => {
+    sortCurrent[1] += 1;
+    sortCurrent[0] = sortType[sortCurrent[1]];
+  })();
+  updateUI(currentAccount, sortCurrent[0]);
+  console.log(sortCurrent);
+});
+
+
+
+
+
+
+
+
+
+
 
 // console.log(deposits);
 // console.log(withdrawls);
